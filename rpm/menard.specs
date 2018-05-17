@@ -1,0 +1,89 @@
+Name: menard
+Summary: Menard Book Manager
+Version: 0.11
+Release: 1
+License: GPLv2+
+Source: menard-0.11.tar.gz
+URL: http://blah
+Packager: Stefan Klein <some@other.com>
+BuildArch: noarch
+
+%if 0%{?suse_version} >= 1210
+BuildRequires: systemd-rpm-macros
+%endif
+#Requires: %{?systemd_requires}
+
+%description
+Menard release 0.11
+
+%prep
+%setup
+%build
+
+%install
+mkdir -p $RPM_BUILD_ROOT/opt/menard/
+cp -R . $RPM_BUILD_ROOT/opt/menard/
+
+chown -R 0777 $RPM_BUILD_ROOT/opt/menard/srv
+chown -R 0777 $RPM_BUILD_ROOT/opt/menard/volatile
+install -D -m 644 systemd/menard.service %{buildroot}%{_unitdir}/menard.service
+
+%pre
+%service_add_pre menard.service
+
+%post
+%service_add_post menard.service
+
+%preun
+%service_del_preun menard.service
+
+%postun
+%service_del_postun menard.service
+
+%files
+%{_unitdir}/menard.service
+
+/opt/menard/
+/opt/menard/bin/
+/opt/menard/bin/books-1.0-174.jar
+/opt/menard/bin/commons-cli-1.4.jar
+/opt/menard/bin/commons-csv-1.4.jar
+/opt/menard/bin/importer-1.0-30.jar
+/opt/menard/bin/json-20170516.jar
+/opt/menard/bin/lucene-1.0-55.jar
+/opt/menard/bin/lucene-analyzers-common-7.1.0.jar
+/opt/menard/bin/lucene-core-7.1.0.jar
+/opt/menard/bin/lucene-highlighter-7.1.0.jar
+/opt/menard/bin/lucene-memory-7.1.0.jar
+/opt/menard/bin/lucene-queryparser-7.1.0.jar
+/opt/menard/bin/lucene-suggest-7.1.0.jar
+/opt/menard/bin/manager-1.0-49.jar
+/opt/menard/srv/
+/opt/menard/srv/books/
+/opt/menard/srv/ui/
+/opt/menard/srv/ui/bookList.css
+/opt/menard/srv/ui/bookList.html
+/opt/menard/srv/ui/bookList.js
+/opt/menard/srv/ui/bookList.json
+/opt/menard/srv/ui/bookUploader.css
+/opt/menard/srv/ui/bookUploader.html
+/opt/menard/srv/ui/bookUploader.js
+/opt/menard/srv/ui/container.css
+/opt/menard/srv/ui/container.html
+/opt/menard/srv/ui/container.js
+/opt/menard/srv/ui/iconSearch.png
+/opt/menard/srv/ui/importMain.html
+/opt/menard/srv/ui/importZotero.css
+/opt/menard/srv/ui/importZotero.html
+/opt/menard/srv/ui/importZotero.js
+/opt/menard/srv/ui/index.html
+/opt/menard/srv/ui/ocrList.css
+/opt/menard/srv/ui/ocrList.html
+/opt/menard/srv/ui/ocrList.js
+/opt/menard/srv/ui/ocrMain.html
+/opt/menard/srv/ui/readScan.html
+/opt/menard/srv/ui/resumable.js
+/opt/menard/srv/ui/server.py
+/opt/menard/systemd/
+/opt/menard/systemd/menard.service
+/opt/menard/volatile/

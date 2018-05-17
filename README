@@ -1,0 +1,9 @@
+Menard
+------
+
+Menard is web-tool to manage ocr-scans together with bibliographical 
+information from zotero. It provides a full-text search within the
+metadata and the ocr-files and a viewer in the browser to read the stored scans.
+
+On the server-side it uses Java 8 to provide the needed REST-APIs. To build
+it use ant and call "ant build", do create a RPM-file call "ant deploy".

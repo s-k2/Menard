@@ -1,0 +1,62 @@
+
+.bookList table {
+	width: 100%;
+	margin-top: 3rem;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+.bookList table thead tr th {
+	/*background-color: steelblue;*/
+	border-bottom: 1px solid steelblue;
+	color: steelblue;
+	padding-bottom: 0.5rem;
+	padding-top: 0.5rem;
+	text-align: left;
+}
+
+.bookList table tbody tr td {
+	padding-bottom: 0.5rem;
+	padding-top: 1rem;
+	vertical-align: left;
+	text-align: left;
+}
+
+.bookList table td:first-child, .bookList table th:first-child {
+	width: 65%;
+}
+
+.bookList table td:not(first-child), .bookList table th:not(first-child) {
+	width: 17.5%;
+}
+
+.bookList .pageNavigation {
+	text-align: center;
+	font-size: 2rem;
+}
+.bookList .pageNavigation li {
+	display: inline-block;
+	font-size: 1.6rem;
+	font-feature-settings: "tnum";
+	width: 1.7em;
+	height: 1.7em;
+	background-color: #FF6666;
+	color: white;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 1.55em;
+	vertical-align: middle;
+	margin-right: 0.5em;
+	margin-right: 0.5em;
+	transition: font 0.2s ease, width 0.2s ease, height 0.2s ease;
+}
+
+.bookList .pageNavigation li.currentPage, .bookList .pageNavigation li:hover {
+	font-size: 2.4rem;
+}
+
+.bookList .pageNavigation li.currentPage {
+	color: #FF6666;
+	background-color: white;
+	border: 1px solid #FF6666;
+}

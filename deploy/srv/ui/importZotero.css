@@ -1,0 +1,86 @@
+
+.ocrList table {
+	width: 100%;
+	margin-top: 3rem;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+.ocrList table thead tr th {
+	/*background-color: steelblue;*/
+	border-bottom: 1px solid steelblue;
+	color: steelblue;
+	padding-bottom: 0.5rem;
+	padding-top: 0.5rem;
+	text-align: left;
+}
+
+.ocrList table tbody tr td {
+	padding-bottom: 0.5rem;
+	padding-top: 1rem;
+	vertical-align: left;
+	text-align: left;
+}
+
+.ocrList table td:first-child, .ocrList table th:first-child {
+	width: 70%;
+}
+
+.ocrList table td:not(first-child), .ocrList table th:not(first-child) {
+	width: 30%;
+}
+
+.ocrList table tbody tr td a {
+	text-decoration: none;
+	color: black;
+}
+
+.ocrList table tbody tr td a:hover {
+	text-decoration: underline;
+}
+
+.ocrList table tbody tr td a:visited {
+	color: grey;
+}
+
+.ocrList table tbody tr td:nth-child(2) {
+	cursor: pointer;
+}
+
+.ocrList table tbody tr td:nth-child(2):hover {
+	text-decoration: underline;
+}
+.ocrList .pageNavigation {
+	text-align: center;
+	font-size: 2rem;
+}
+.ocrList .pageNavigation li {
+	display: inline-block;
+	font-size: 1.6rem;
+	font-feature-settings: "tnum";
+	width: 1.7em;
+	height: 1.7em;
+	background-color: #FF6666;
+	color: white;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 1.55em;
+	vertical-align: middle;
+	margin-right: 0.5em;
+	margin-right: 0.5em;
+	transition: font 0.2s ease, width 0.2s ease, height 0.2s ease;
+}
+
+.ocrList .pageNavigation li.currentPage, .ocrList .pageNavigation li:hover {
+	font-size: 2.4rem;
+}
+
+.ocrList .pageNavigation li.currentPage {
+	color: #FF6666;
+	background-color: white;
+	border: 1px solid #FF6666;
+}
+
+.ocrList button {
+	display: none;
+}

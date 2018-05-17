@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Zoologie zur Zeit Georg Büchners</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<!-- <link rel="stylesheet" href="container.css"/>-->
+<style>
+
+@import url('https://fonts.googleapis.com/css?family=Raleway:200,300');
+
+html {
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	background-color: lightgrey;
+}
+
+
+html * {
+	font-family: "Raleway", serif;
+	font-weight: 200;
+	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
+}
+
+body {
+	font-size: 1.4em;
+}
+
+body>.container {
+width: 60rem;
+       min-height: 75vh;
+margin: 0 auto;
+padding: 1rem;
+	 padding-left: 4rem;
+	 padding-right: 4rem;
+	 background-color: white;
+display: none;
+}
+
+body>.container.active {
+display: block;
+}
+
+p {
+	font-size: 1.4rem;
+	line-height: 1.9em;
+}
+
+p strong {
+	font-weight: 300;
+}
+
+h1 {
+	font-size: 2rem;
+	margin-bottom: 4rem;
+	text-align: center;
+}
+
+h2 {
+	margin-top: 4rem;
+	font-size: 1.9rem;
+}
+
+h2>span {
+display: inline-block;
+width: 1.7em;
+height: 1.7em;
+	background-color: #FF6666;
+color: white;
+       border-radius: 50%;
+       text-align: center;
+       line-height: 1.55em;
+       vertical-align: middle;
+       padding-left: 0.15em;
+margin: 0;
+} 
+
+input[type="text"] {
+	font-size: inherit;
+border: none;
+	border-bottom: 1px solid #DC143C;
+}
+
+input[type="text"]:hover,input[type="text"]:focus  {
+outline: none;
+}
+
+em {
+	color: steelblue;
+	font-style: normal;
+
+}
+
+html {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+/*	display: grid;
+	grid-template-columns: 25rem 1fr;*/
+	padding: 0;
+	margin: 0;
+}
+
+.info {
+	position: fixed;
+	top: 0;
+	width: 25rem;
+	padding: 0.5rem;
+	background-color: white;
+height: 100vh;
+overflow: auto;
+}
+
+.reader {
+	margin-left: 25rem;
+	background-color: grey;
+}
+
+.page {
+margin: 0 auto;
+padding: 1rem;
+padding-top: 0rem;
+padding-bottom: 0.8rem;
+}
+
+.page:first-child {
+	padding-top: 1rem;
+}
+
+.page img, .page svg {
+	width: 100%;
+}
+
+.page svg {
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-color: lightgrey;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'  viewBox='0 0 100 150'%3E%3Ccircle cx='50' cy='50' fill='none' stroke='darkgrey' stroke-width='6' r='25'/%3E%3Ccircle cx='50' cy='50' fill='none' stroke='steelblue' stroke-width='6' r='25' stroke-dasharray='40px 200px'%3E%3CanimateTransform attributeName='transform' type='rotate' calcMode='linear' values='0 50 50;360 50 50' keyTimes='0;1' dur='3s' begin='0s' repeatCount='indefinite'%3E%3C/animateTransform%3E%3C/circle%3E%3C/svg%3E");
+	     background-size: 200px 200px;
+}
+
+.page .placeholder {
+	background-color: white;
+}
+
+#scanBibInfo {
+	color: steelblue;
+}
+
+</style>
+<script>
+class Server {
+	static Get(filename, okCallback, errorCallback) {
+		let sendRequest = new XMLHttpRequest();
+		sendRequest.open("GET", filename, true);
+		sendRequest.onreadystatechange = () => {
+			if(sendRequest.readyState == 4) {
+				if(sendRequest.status == 200) {
+					okCallback(sendRequest.responseText);
+				} else {
+					errorCallback(sendRequest.responseText);
+				}
+			}
+		}
+		sendRequest.send(null);
+
+	}
+}
+
+document.addEventListener("scroll", updateAfterScroll, false);
+
+class PageLoader {
+	constructor() {
+		this.queue = new Array();
+	}
+
+
+	queuePage(pageNode) {
+		console.log("queuePage called for: " + pageNode.info);
+		if(this.queue.length > 0) {
+			this.queue.unshift(pageNode);
+		} else {
+			this.loadPage(pageNode);
+		}
+	}
+
+	checkQueue() {
+		if(this.queue.length > 0) {
+			this.loadPage(queue.shift());
+		}
+
+		if(this.queue.length > 5)
+			this.queue.splice(5);
+	}
+
+	deferedCheckQueue() {
+		if(this.queue.length > 0)
+			window.setTimeout(this.checkQueue.bind(this), 50);
+	}
+
+	loadPage(pageNode) {
+		console.log("loadPage called for: " + pageNode.info);
+
+		pageNode.classList.remove("placeholder");
+		let img = document.createElement("img");
+		img.src = pageNode.scanFilePath;
+		img.onload = function() {
+			pageNode.replaceChild(img, pageNode.querySelector("svg"));
+			this.deferedCheckQueue();
+		}.bind(this);
+	}
+}
+
+let pageLoader = new PageLoader(); 
+
+function getVisiblePages()
+{
+	let allPages = document.querySelectorAll("div.page");
+
+	let visiblePages = new Array();
+	for(let i = 0; i < allPages.length; i++) {
+		if(isElementInViewport(allPages[i])) {
+			visiblePages.push(allPages[i]);
+		}
+	}
+
+	return(visiblePages);
+}
+
+function updateAfterScroll() {
+	let visiblePages = getVisiblePages();
+
+	for(let i = 0; i < visiblePages.length; i++) {
+		if(visiblePages[i].classList.contains("placeholder"))
+			pageLoader.queuePage(visiblePages[i]);
+	}
+
+	if(visiblePages.length > 0 && 
+			visiblePages[visiblePages.length - 1].nextElementSibling != null &&
+			visiblePages[visiblePages.length - 1].nextElementSibling.classList.contains("placeholder"))
+	{
+		pageLoader.queuePage(visiblePages[visiblePages.length - 1].nextElementSibling);
+	}
+}
+
+function isElementInViewport (el) {
+	var rect = el.getBoundingClientRect();
+
+	// it's definitely outside if bottom < 0
+	if(rect.bottom <= 0)
+		return(false);
+	if(rect.top > window.innerHeight)
+		return(false);
+
+	return(true);
+}
+
+function padNumber(num, padCount) {
+	let outStr = num + "";
+	while(outStr.length < padCount)
+		outStr = "0" + outStr;
+
+	return(outStr);
+}
+
+function parseURLParams(url) {
+	let parser = document.createElement('a');
+	parser.href = url;
+
+	let searchObject = {};
+	let queries = parser.search.replace(/^\?/, '').split('&');
+	for(let i = 0; i < queries.length; i++ ) {
+		let split = queries[i].split('=');
+		searchObject[split[0]] = split[1];
+	}
+	
+	return(searchObject);
+}
+
+function init() {
+	let parsedUrlParams = parseURLParams(window.location.href);
+	let scanId = parseInt(parsedUrlParams['scanId']);
+	
+	Server.Get("/books/" + scanId + "/readerInfo.json", function(content) {
+		let scanInfo = JSON.parse(content);
+		
+		scanInfo.pages.sort(function(a, b) {
+			return(a.pageNumber - b.pageNumber);
+		});
+
+		for(let i = 0; i < scanInfo.pages.length; i++) {
+			let svgCode = "<svg viewBox='0 0 " + 
+				scanInfo.pages[i].width + " " + 
+				scanInfo.pages[i].height + "'/>";
+
+			let pageNode = document.createElement("div");
+			pageNode.innerHTML = svgCode;
+			pageNode.classList.add("page");
+			pageNode.classList.add("placeholder");
+			let anchorNode = document.createElement("a");
+			anchorNode.name = "page" + scanInfo.pages[i].pageNumber;
+			document.querySelector(".reader").appendChild(anchorNode);			
+			document.querySelector(".reader").appendChild(pageNode);
+			pageNode.scanFilePath = scanInfo.pages[i].file;
+			pageNode.info = i;
+		}
+
+		// if an anchor was specified go there (as it is now defined)
+		if(location.hash)
+			location.hash = location.hash;
+		updateAfterScroll();
+	}, function() {
+		// print some error message here
+	});
+
+	Server.Get("/books/" + scanId + "/info.json", function(content) {
+		let scanInfo = JSON.parse(content);
+
+		document.getElementById("scanBibInfo").innerHTML = scanInfo.description;
+	}, function() {
+		// print some error message here
+	});
+
+	
+	if(!parsedUrlParams.hasOwnProperty("query"))
+		return;
+
+	parsedUrlParams["query"] = decodeURIComponent(parsedUrlParams["query"]);
+		
+	Server.Get("/books/actions/searchInScan?scanId=" + scanId + "&query=" + encodeURIComponent(parsedUrlParams["query"]), function(content) {
+		let searchResults = JSON.parse(content);
+		// temporary needed
+		searchResults.pages = searchResults.books;
+
+		document.getElementById("searchQuery").innerHTML = parsedUrlParams["query"];
+		
+		let pagesList = [];
+		for(let i = 0; i < searchResults.pages.length; i++)
+			pagesList.push(searchResults.pages[i]);
+		pagesList = pagesList.filter((v, i, a) => a.indexOf(v) === i); 
+
+		let resultLinks = "";
+		for(let i = 0; i < pagesList.length; i++) {
+			resultLinks = resultLinks + " " + "<a href='#page" + 
+				pagesList[i] + "'>" + pagesList[i] + "</a>";			
+		}
+		
+		document.getElementById("linkList").innerHTML = resultLinks;
+	}, function() {
+		// print some error message here
+	});
+}
+
+window.addEventListener("load", init, false);
+</script>
+</head>
+<body>
+
+		<div class="info">
+			<h1>Buchansicht</h1>
+			<p id="scanBibInfo"></p>
+			<p>Ihr Suchbegriff '<span id="searchQuery"></span>' wurde auf folgenden Seiten gefunden:</p>
+			<p id="linkList"></p>
+		</div>
+
+
+	<div class="reader">
+	</div>
+</body>
+</html>
+

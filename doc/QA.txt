@@ -1,0 +1,94 @@
+Warum ist der Zotero-Speicherplatz voll?
+----------------------------------------
+
+Wir sammeln nur Metadaten in Zotero, deswegen sollten wir die 300MB
+des Speicherplatzes nie benötigen. Leider legt Zotero aber bei jedem
+automatisch importierten Eintrag noch zusätzliche Dateien ab.
+Das sind einerseits PDF-Dateien (meist das Inhaltsverzeichnis
+des entsprechenden Werkes) und andererseits jeweils eine Kopie der
+Website, auf der das betreffende Werk gefunden wurde (einschließlich
+aller Bilder dieser Seite).
+
+Wenn diese Dateien nicht benötigt werden, könnten wir Speicherplatz 
+sparen. Insbesondere die angehängten Websites belegen jeweils mindestens 
+0,1MB. 1000 Einträge belegen also so bereits 100MB - viele Seiten sogar 
+etwas mehr. Um sie zu löschen, müssen wir nur jeweils diese Anhänge 
+(sie sind graphisch in einem Aufklappmenü als den Einträgen untergeordnet 
+dargestellt) in den Papierkorb verschieben. Meist heißen die Dateien 
+"Snapshot" oder nach dem Titel im Katalog.
+
+
+
+
+Wo finde ich eine Liste der Werke mit den technischen Zusatzinformationen?
+--------------------------------------------------------------------------
+
+Die Liste aller Bücher kann man z. B. in Firefox unter der Adresse
+http://<server>/books/actions/listBooks ansehen.
+
+
+
+
+Warum zeigt Zotero bei manchen Werken in der Unteransicht Website statt Buch an?
+--------------------------------------------------------------------------------
+
+Das ist eine Darstellung von Zotero. Sobald Zotero einen Standort im Archiv 
+vorfindet, stellt es diese Website als einen Unterpunkt dar. Intern ist das aber 
+trotzdem ein einziger Eintrag vom Typ Buch.
+
+
+
+
+"Error while doing data-transfer": No space left on device" beim Upload
+-----------------------------------------------------------------------
+
+Dann gilt es, eine Speichererweiterung für den Server zu bestellen. Denn der
+Speicher ist nicht auf dem Nutzer-PC, sondern am Server knapp.
+
+
+
+
+Beim Upload mit dem Internet-Explorer wird die Oberfläche nicht angezeigt
+-------------------------------------------------------------------------
+
+Der Internet Explorer seit erscheinen von Windows 10 nicht mehr aktiv
+weiterentwickelt und ist durch einen Nachfolger mit dem Namen Edge
+ersetzt worden - allerdings nur für Windows 10. Damit die Software auch in 
+ein paar Jahren funktioniert, verwendet sie teilweise Funktionen die erst 
+kürzlich als Ersatz für alte Zöpfe eingeführt wurden. Der Internet Explorer 
+kann leider nur die veralteten Techniken, aber die werden bei neueren Browsern
+z. T. schrittweise entfernt werden. Deshalb sollte Firefox, Chrome oder Edge 
+benutzt werden, die neuen Funktionen für die Software bereitstellen.
+
+
+
+
+Die OCR-Dateien sind kaum lesbar
+--------------------------------
+
+Die Ergebnisse des OCR-Prozesses sind nicht perfekt. Das liegt 
+einerseits sicherlich an den Scans, deren Qualität ebenfalls schwankt. 
+Andererseits bedeuteten selbst die hohen Erkennungsleistungen der OCR-Tools 
+von weit über 90% immer noch einige Fehler auf jeder Textseite. 
+Das ist selbstverständlich nicht optimal, bietet die Suche auch so relativ
+viele Möglichkeiten.
+Selbstverständlich ist das immer noch verbesserungsfähig, aber ohne
+zeitaufwendige Handarbeit ist das kaum zu vermeiden. Die OCR-Software trifft
+beispielsweise eine Wahrscheinlichkeitsentscheidung, um das sehr ähnliche 
+Doppel-s und die ff-Ligatur bzw. ä und a zu unterscheiden. Und abhängig vom 
+Druckbild können diese Wahrscheinlichkeiten sehr schnell zu Ungunsten der
+richtigen Lesart ausfallen. Zunächst sollte einmal stichprobenartig untersucht 
+werden, ob tatsächlich im nennenswerten Umfang relevante Suchbegriffe verloren 
+gehen. Marginale Fehler bei einzelnen Wörtern sind ein kleineres Problem als die
+Texte, bei denen wir nur weitestgehend unlesbarere OCR-Texte Texte
+besitzen. 
+Daneben gibt es aber noch weitere Probleme: Alternative Schreibweisen (z.
+B. Thier und Tier) bzw. Umbrüche innerhalb eines gesuchten Worts. Dies wird
+aktuell nicht berücksichtigt und kann auch dazu führen, dass Suchergebnisse 
+nicht ermittelt werden können. Vielleicht sollten diese (durchaus mit
+Hilfe z. B. von Stylo) ermittelt werden, um sie vorrangig noch einmal mit einem
+OCR-Programm zu bearbeiten.
+
+
+
+

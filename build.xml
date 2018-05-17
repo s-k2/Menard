@@ -1,0 +1,53 @@
+<project>
+	<property file="build.projectinfo"/>
+	<macrodef name="iterate">
+		<attribute name="target"/>
+		<sequential>
+			<subant target="@{target}">
+				<fileset dir="src" includes="*/build.xml"/>
+			</subant>
+		</sequential>
+	</macrodef>
+
+	<target name="build">
+		<iterate target="build"/>
+	</target>
+	
+	<target name="deploy">
+	    <delete includeemptydirs="true">
+            <fileset dir="deploy/bin" includes="**/*"/>
+        </delete>
+        
+		<iterate target="deploy"/>
+		
+		<exec executable="bash">
+			<arg line="rpm/update-systemd.sh"/>
+		</exec>
+		
+		<exec executable="tar" output="${project.rpm.dir}/menard.specs">
+			<arg line="--transform=s/deploy/menard-${project.version}/g -zcf ${project.rpm.dir}/menard-${project.version}.tar.gz deploy"/>
+		</exec>
+		
+		<exec executable="tar" output="${project.rpm.dir}/menard.specs">
+			<arg line="--transform=s/deploy/menard-${project.version}/g -zcf ${project.rpm.dir}/menard-${project.version}.tar.gz deploy"/>
+		</exec>
+		<exec executable="sed" output="${project.rpm.dir}/menard.specs.tmp">
+			<arg line="s/__MENARD_VERSION__/${project.version}/g ${project.rpm.dir}/menard.specs.template"/>
+		</exec>
+		<exec executable="tar" output="${project.rpm.dir}/menard.specs.tmp" append="true">
+			<arg line="--show-transformed-names --transform=s,^menard-${project.version},__INSTALL_ROOT_,g -tf ${project.rpm.dir}/menard-${project.version}.tar.gz"/>
+		</exec>
+		<exec executable="sed" output="${project.rpm.dir}/menard.specs">
+			<arg line="s,__INSTALL_ROOT_,/opt/menard,g ${project.rpm.dir}/menard.specs.tmp"/>
+		</exec>
+		<exec executable="rm">
+			<arg line="${project.rpm.dir}/menard.specs.tmp"/>
+		</exec>
+	</target>
+
+	<target name="hell">
+	
+
+	</target>
+	
+</project>

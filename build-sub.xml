@@ -1,0 +1,60 @@
+<project>
+
+    <property file="build.number"/>
+    <property file="build.packageinfo"/>
+
+    <property name="project.dir" location="../.."/>
+    <property name="src.dir" location="." />
+    <property name="lib.dir" location="${project.dir}/lib" />
+    
+    <property name="build.dir" location="${project.dir}/build/${package.name}" />
+    <property name="build.classes.dir" location="${build.dir}/classes"/>
+    <property name="build.jar.dir" location="${build.dir}/jar"/>
+    <property name="build.jar" location="${build.jar.dir}/${package.name}-${package.version}-${build.number}.jar"/>
+
+    <property name="deploy.dir" location="${project.dir}/deploy/bin/"/>
+    
+    <path id="build.classpath">
+	<filelist dir="${lib.dir}" files="${package.libs}"/>
+    </path>
+
+   <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="build">
+	    <mkdir dir="${build.classes.dir}"/>
+	    <javac includeantruntime="false" srcdir="${src.dir}" destdir="${build.classes.dir}" debug="on" classpathref="build.classpath" />
+
+	    <echo message="Libs used: ${package.libs}"/>
+	    <mkdir dir="${build.jar.dir}"/>
+	    <jar destfile="${build.jar}" basedir="${build.classes.dir}">
+		    <manifest>
+			    <attribute name="Main-Class" value="${package.name}.${package.main}"/>
+			    <attribute name="Class-Path" value="${package.libs}"/>
+		    </manifest>
+	    </jar>
+    </target>
+
+    <target name="run">
+	    <copy todir="${build.jar.dir}" preservelastmodified="true" flatten="true">
+		    <filelist dir="${lib.dir}" files="${package.libs}"/>
+	    </copy>
+		<copy todir="${deploy.dir}" preservelastmodified="true" flatten="true">
+			<filelist dir="${lib.dir}" files="${package.libs}"/>
+		</copy>
+	    <java jar="${build.jar}" classpathref="build.classpath"  fork="true">
+		    <arg line="${package.runargs}"/>
+	    </java>
+    </target>
+
+    <target name="deploy">
+	<buildnumber file="build.number"/>
+
+	<mkdir dir="${deploy.dir}"/>
+	<copy file="${build.jar}" todir="${deploy.dir}" preservelastmodified="true"/>
+	<copy todir="${deploy.dir}" preservelastmodified="true" flatten="true">
+		<filelist dir="${lib.dir}" files="${package.libs}"/>
+	</copy>
+    </target>
+</project>

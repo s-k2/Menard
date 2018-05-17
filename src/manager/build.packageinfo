@@ -1,0 +1,5 @@
+package.name=manager
+package.version=1.0
+package.libs=commons-cli-1.4.jar
+package.main=Main
+package.runargs=-b ../../deploy/bin/ -d ../../deploy/srv/ -v ../../deploy/volatile

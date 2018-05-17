@@ -1,0 +1,45 @@
+Name: menard
+Summary: Menard Book Manager
+Version: __MENARD_VERSION__
+Release: 1
+License: GPLv2+
+Source: menard-__MENARD_VERSION__.tar.gz
+URL: http://blah
+Packager: Stefan Klein <some@other.com>
+BuildArch: noarch
+
+%if 0%{?suse_version} >= 1210
+BuildRequires: systemd-rpm-macros
+%endif
+#Requires: %{?systemd_requires}
+
+%description
+Menard release __MENARD_VERSION__
+
+%prep
+%setup
+%build
+
+%install
+mkdir -p $RPM_BUILD_ROOT/opt/menard/
+cp -R . $RPM_BUILD_ROOT/opt/menard/
+
+chown -R 0777 $RPM_BUILD_ROOT/opt/menard/srv
+chown -R 0777 $RPM_BUILD_ROOT/opt/menard/volatile
+install -D -m 644 systemd/menard.service %{buildroot}%{_unitdir}/menard.service
+
+%pre
+%service_add_pre menard.service
+
+%post
+%service_add_post menard.service
+
+%preun
+%service_del_preun menard.service
+
+%postun
+%service_del_postun menard.service
+
+%files
+%{_unitdir}/menard.service
+

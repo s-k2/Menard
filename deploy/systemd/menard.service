@@ -1,0 +1,9 @@
+[Unit]
+Description=Menard Service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/java -jar /opt/menard/bin/manager-1.0-49.jar -b /opt/menard/bin -d /opt/menard/srv -v /opt/menard/volatile
+
+[Install]
+WantedBy=multi-user.target

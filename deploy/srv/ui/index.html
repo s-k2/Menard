@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Zoologie zur Zeit Georg Büchners</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+   <!-- <link rel="stylesheet" href="container.css"/>-->
+<style>
+
+@import url('https://fonts.googleapis.com/css?family=Raleway:200,300');
+
+html {
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	background-color: lightgrey;
+}
+
+
+html * {
+	font-family: "Raleway", serif;
+	font-weight: 200;
+	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
+}
+
+body {
+	font-size: 1.4em;
+}
+
+body>.container {
+	width: 60rem;
+	min-height: 75vh;
+	margin: 0 auto;
+	padding: 1rem;
+	padding-left: 4rem;
+	padding-right: 4rem;
+	background-color: white;
+	display: none;
+}
+
+body>.container.active {
+	display: block;
+}
+
+p {
+	font-size: 1.4rem;
+	line-height: 1.9em;
+}
+
+p strong {
+	font-weight: 300;
+}
+
+h1 {
+	font-size: 3rem;
+	margin-bottom: 4rem;
+	text-align: center;
+}
+
+h2 {
+	margin-top: 4rem;
+	font-size: 1.9rem;
+}
+
+h2>span {
+	display: inline-block;
+	width: 1.7em;
+	height: 1.7em;
+	background-color: #FF6666;
+	color: white;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 1.55em;
+	vertical-align: middle;
+	padding-left: 0.15em;
+	margin: 0;
+} 
+
+input[type="text"] {
+	font-size: inherit;
+	border: none;
+	border-bottom: 1px solid #DC143C;
+}
+
+input[type="text"]:hover,input[type="text"]:focus  {
+	outline: none;
+}
+
+body>.container.active {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+#searchBox {
+	main-width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: flex-top;
+}
+
+#searchText {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	width: 80%;
+}
+
+#searchButton {
+	margin: 0;
+	background-color: #DC143C;
+	border: none;
+	height: 2.9rem;
+	width: 2.9rem;
+	display: flex;
+	justify-content: center;
+}
+
+#searchButton:active, #searchButton:hover {
+	background-color: red;
+}
+
+#searchResultsFrame {
+	margin-top: 1rem;
+	border: 1px solid #DC143C;
+	padding: 0;
+}
+
+#searchResultsFrame.hidden {
+	display: none;
+}
+
+#searchResultsFrame p {
+	background-color: #DC143C;
+	color: white;
+	margin: 0;
+	padding: 0.2rem;
+}
+
+#searchResults li {
+	margin: 1rem;
+	padding: 0.2rem;
+}
+
+#searchResults li:nth-child(even) {
+	background-color: #eeeeee;
+}
+
+#searchResults {
+	/*list-style-type: none;*/
+	padding: 0;
+	margin-left: 2.5rem;
+	background-color: white;
+}
+
+</style>
+<script>
+class Server {
+	static Get(filename, okCallback, errorCallback) {
+		let sendRequest = new XMLHttpRequest();
+		sendRequest.open("GET", filename, true);
+		sendRequest.onreadystatechange = () => {
+			if(sendRequest.readyState == 4) {
+				if(sendRequest.status == 200) {
+					okCallback(sendRequest.responseText);
+				} else {
+					errorCallback(sendRequest.responseText);
+				}
+			}
+		}
+		sendRequest.send(null);
+
+	}
+}
+function parseURLParams(url) {
+	let parser = document.createElement('a');
+	parser.href = url;
+
+	let searchObject = {};
+	let queries = parser.search.replace(/^\?/, '').split('&');
+	for(let i = 0; i < queries.length; i++ ) {
+		let split = queries[i].split('=');
+		searchObject[split[0]] = split[1];
+	}
+	
+	return(searchObject);
+}
+
+function init() {
+	document.querySelector("#searchButton").addEventListener("click", doSearch.bind(this));
+	
+	document.querySelector("#searchText").addEventListener("keyup", function(event) {
+		event.preventDefault();
+		if (event.keyCode == 13) {
+			doSearch();
+		}
+	});
+	loadQuery();
+}
+
+function loadQuery(restoreIfEmpty) {
+	let parsedUrlParams = parseURLParams(window.location.href);
+	if(parsedUrlParams.hasOwnProperty("query")) {
+		document.querySelector("#searchText").value = decodeURIComponent(parsedUrlParams["query"]);
+		doSearch(true);
+	} else if(restoreIfEmpty) {
+		document.querySelector("#searchText").value = "";
+		document.querySelector("#searchResultsFrame").className = "hidden";
+	}
+}
+
+function doSearch(noPushState) {
+	if(!noPushState)
+		history.pushState(null, "Suche", "?query=" + encodeURIComponent(document.querySelector("#searchText").value));
+
+	Server.Get("/books/actions/search?query=" + document.querySelector("#searchText").value + "&database=current",
+		function (resultStr) {
+			let result = JSON.parse(resultStr);
+			
+			let results = "<p>" + result.books.length + " Suchergebnisse für \"" + document.querySelector("#searchText").value + "\" </p><ol id='searchResults'>";
+			for(let book of result.books) {
+				if(book.hasOwnProperty("scanId"))
+					results = results + "<li><a href='" + "/ui/readScan.html?scanId=" + book.scanId + "&query=" + encodeURIComponent(document.querySelector("#searchText").value) + "' target='_blank'>" + book.bibLine + "</a></li>";
+				else
+					results = results + "<li>" + book.bibLine + "</li>";
+			}
+			results = results + "</ol>";
+			document.querySelector("#searchResultsFrame").innerHTML = results;
+			document.querySelector("#searchResultsFrame").className = '';
+		},
+		function () {
+			document.querySelector("#searchResultsFrame").innerHTML = "<p>Fehler bei der Suche</p>";
+			document.querySelector("#searchResultsFrame").className = '';
+		});
+}
+
+window.onpopstate = function(event) {
+	loadQuery(true);
+};
+
+window.addEventListener("load", init, false);
+</script>
+  </head>
+  <body>
+   <h1>Zoologie</h1>
+   
+   <div class="container active">
+    <div id="searchBox">
+     <input id="searchText" type="text"/ placeholder="Suchbegriff hier eingeben">
+     <button id="searchButton"><img src="iconSearch.png"></button>
+    </div>
+   
+   <div id="searchResultsFrame" class="hidden">
+    <p>Starten Sie eine Suche, indem Sie oben einen Begriff eingeben!</p>
+   <div>
+   </div>
+  </body>
+</html>

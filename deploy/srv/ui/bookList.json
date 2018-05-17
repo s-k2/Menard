@@ -1,0 +1,111 @@
+
+{
+	"books": [
+		{
+			"title": "Hans Herbert: Das tolle Buch, München 1968",
+			"date": "21.7.2017",
+			"ocr": true
+		},
+       		{
+			"title": "Ulf Olfson: Das Werk, Buenos Aires, 1994",
+			"date": "11.7.2017",
+			"ocr": true
+		},
+		{
+			"title": "First book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Second book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Third book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Fourth book",
+			"date": "10.10.2017",
+			"ocr": true
+		},
+		{
+			"title": "Fifth book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Sixth book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Seventh book",
+			"date": "10.10.2017",
+			"ocr": true
+		},
+		{
+			"title": "Eigth book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Nineth book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "First book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Second book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Third book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Fourth book",
+			"date": "10.10.2017",
+			"ocr": true
+		},
+		{
+			"title": "Fifth book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Sixth book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Seventh book",
+			"date": "10.10.2017",
+			"ocr": true
+		},
+		{
+			"title": "Eigth book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Nineth book",
+			"date": "10.10.2017",
+			"ocr": false
+		},
+		{
+			"title": "Don Quixote",
+			"date": "10.10.2017",
+			"ocr": false
+		}
+
+	]
+}

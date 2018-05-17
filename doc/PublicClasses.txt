@@ -1,0 +1,91 @@
+Classes to access disk-contents (aka the “database”)
+----------------------------------------------------
+
+BookDir
+Represents a directory inside “books” and provides functions to access some metadata of such a directory (like its id, path on the file-system, attached JSON-files, information whether it has OCR, ...) and all the functions required to create a new book-dir with a valid and unique id (using atomic-moves to provide consistency).
+
+BookInfo
+Methods to access and to atomically change the contents of the info.json-file (archive-URL, title, date, ...). It provides a static function to iterate over all JSON-files of the database.
+
+ReaderInfo
+Methods to access and to atomically change the contents of the readerInfo.json-file to list width, height, scan-URL and page-number of each scanned file of one book.
+
+ExpiringFiles
+A class that implements the automatically deletion of all ExpiringFile-objects on the server using TimerTask-class.
+
+Classes to capsule uploading new scanned books
+----------------------------------------------
+
+ExpiringFile
+A file within the temporary directory of the service. Such a file will be deleted automatically after some time of inactivity. It is a base-class used e.g. by ChunkedUpload or AssignedZip.
+
+ChunkedUpload (!)
+Represents an uploaded zip-file that is not yet completed. It derives from ExpiringFile thus it will be deleted if it is not changed in a certain amount of time. Its constructor tries to find the other parts of this upload using the userIdentifier provided by the client, writes the new chunk to disk (synchronized to prevent race-conditions) and has a function to check if the file has been completed.
+
+UnassignedZip
+Represents an completly uploaded zip-file that has not yet been assigned to a specific book via SaveBook. Thus it will be deleted after some time if SaveBook will not be called. On its creation it checks the the ZIP-file to be valid. It also reads out a list of all scans inside that zip and whether an text-only OCR-file has been found.
+
+AssignedZip
+Represents an uploaded zip-file that is assigned to a specific BookDir (thus it is constructed from an UnassignedZip). It allows to extract each scanned-page and the OCR-file from an complete uploaded zip to a the BookDir it is assigned to.
+
+
+Classes to handle HTTP-requests
+-------------------------------
+
+BooksService
+The main-class of the program. It derives from Microservice and creates an HTTP-server that creates an object of the proper class implementing PathHandler for a valid request.
+
+ChunkedUploader (!)
+A base-class to handle the upload of one chunk of a bigger file. It uses ChunkedUpload to write the new chunk on the disk or creates a new upload if this is the first chunk. It is an abstract class as it does not implement the getResponse-method of PathHandler. It is the job of each subclass to provide such a method. They may use the complete-information which is provided by this class in the response.
+
+BooksList
+Creates an JSON-response which lists all books with title, archive-URL, date of upload and info whether they already contain OCR-data.
+
+ChunkedBookUploader
+Handle an HTTP-request to upload another chunk of one yet unassigned zip-file. If the last chunk has been uploaded, an UnassignedZip-object will be created. It also informs the client, if the upload has been completed. Management of the chunks and such things is done in its base-class ChunkedUploader
+
+ChunkedOCRUploader
+Handle an HTTP-request to chunk-upload a new XML-OCR-file.
+
+ChunkedZoteroUploader
+Handle an HTTP-request to upload a new CSV-file from Zotero containing the current meta-data. On complete it creates an object of type ZoteroImporter which creates a new Lucene-index and updates the JSON-metadata.
+
+DownloadBook
+Handle an HTTP-request which returns a ZIP-file containing all files of one BookDir specified by its id.
+
+OCRList
+Creates a JSON-response which lists each book and shows whether an XML-OCR-file exists for it.
+
+SaveBook
+In the HTTP-request the client uploads an XML-file containing the ids of already uploaded zip-files and the archive-URL of this new book. Those UnassignedZip’s will be extracted and put into a new BookDir and an info.json-file will be created. After this a new book has been stored permanently on the server.
+
+Search
+Handle an HTTP-request which starts a new fulltext-search with Lucene. The results are returned as an JSON-file showing the URLs of all books where the search-term has been found.
+
+SearchInScan
+Handle an HTTP-request which starts a new fulltext-search in just one book. The results are returned as an JSON-file which contains the page of each search-term found within that book.
+
+
+Helpers for the HTTP-server
+---------------------------
+
+PathHandler
+Each HTTP-request is handled by an object that implements the methods of this interface.
+
+HttpParameters
+A class to parse the parameter-part of an URI-object. It throws an error, if the paramter was not specified.
+
+Response
+An interface to encapsule the response of this service to a HTTP-request with methods to inform about the content-type, length, etc. of this response.
+
+JSONResponse
+Implements the Response-interface for JSON-responses with the possibility to indicate an error via the error-code of HTTP.
+
+Microservice
+Starts a HttpServer-object of the (com.sun.net-package) and implements a HttpHandler. It is an abstract base-class. For each HTTP-request is calls the method constructHandler with the URI split into the path-part and the paramter-part. This method needs to be implemented by all sub-classes and must return an object implementing the interface PathHandler. An InputStream to get the complete HTTP-request is given to this object by calling its setInputStream-method. The object is asked about the response via the getResponse-method by the Microservice-class. In case of an exception this class writes a JSON-response with details about that error.
+
+MicroserviceConfig
+A class that uses the command-line-arguments to read out the configuration of this service. It provides getter-methods to read those values.
+
+
+
